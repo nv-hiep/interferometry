@@ -1,0 +1,35 @@
+#-----------------------------------------------------------------------------#
+#                                                                             #
+#                            Guides                                           #
+#                                                                             #
+#-----------------------------------------------------------------------------#
+
+1)  Select an array configuration from dropdown. Then it will be shown in the
+    scatter plot right below.
+
+2)  Select an source image from dropdown. Then it will be shown in the plot
+    right below.
+   
+3)  Type into the text boxes the hour angle range from -12 to 12 (hours).
+
+4)  Choose a sampling cadence from the dropdown. This is the interval between
+    model visabilities.
+   
+5)  Type into the text box the declination of the source.
+
+7)  Type into the text box the Pixel Scale value to set the size of your model
+    image (assumes square pixels).
+   
+8)  Choose the observing frequency from the dropdown.
+   
+9)  Click "Elevation curve" to show the curve of elevation vs hour angle.
+
+10) Then "UV Coverage" to calculate the UV coverage
+
+11) "Source FFT" -> the FFT of the source image
+
+12) "Observed FFT" -> The observed FFT of the source
+
+13) "Beam" to calculte the Synthesised beam
+
+14) "Go!" to do the observation
