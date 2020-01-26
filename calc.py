@@ -195,11 +195,11 @@ def get_elevation_curve(latitude_rad, ha_hr, decl, samp_rate):
 
 
 
-## Calc. the elevation curves for an array from source declination within a range of hour-angles
+## Calc. the uv-coverage
  #
  # params dict data   infor of the array
  #
- # return ???
+ # return uv arrays in unit of lambda
  # 
  # Version 11/2019
  # Author Hiep Nguyen
@@ -246,24 +246,29 @@ def get_uv_coverage(infor, decl, ha_arr_hr, el_arr_deg, lambda_m):
  #
  # params float angle_deg   Angle in degree
  #
- # return ???
+ # return string
  # 
  # Version 11/2019
- # Author Cormac
+ # Author Hiep Nguyen
  ##
-def ang2str(angle_deg):
-    """Convert an angle in degrees to a unicode string with appropriate units.
+def deg2str(angle_deg):
     """
+    Convert an angle in degrees to a unicode string with appropriate units.
+    Based on Cormac's code
+    """
+    
     try:
-        angle_deg = float(angle_deg)
-        angle_arcsec = angle_deg*3600.0
-        if angle_arcsec<60.0:
+        angle_deg    = float(angle_deg)
+        angle_arcsec = angle_deg*3600.
+
+        if (angle_arcsec < 60.):
             text = u'{:.2f}"'.format(angle_arcsec)
-        elif angle_arcsec>=60.0 and angle_arcsec<3600.0:
-            text = u"{:.2f}'".format(angle_deg*60.0)
+        elif ( (angle_arcsec >= 60.) and (angle_arcsec < 3600.) ):
+            text = u"{:.2f}'".format(angle_deg*60.)
         else:
             text = u"{:.2f}\u00B0".format(angle_deg)
         return text
+
     except Exception:
         return ""
 
@@ -277,7 +282,7 @@ def ang2str(angle_deg):
  #
  # params dict data   infor of the array
  #
- # return ???
+ # return Arrays from FFT
  # 
  # Version 11/2019
  # Author Hiep Nguyen

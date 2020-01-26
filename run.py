@@ -41,7 +41,7 @@ if sys.platform=="darwin":
     hasCV2 = False
 
 # Modules
-import md_calc as cal
+import calc as c
 
 
 
@@ -156,14 +156,14 @@ class Window(tk.Frame):
         # For array configurations
         self.array = tk.StringVar(self.master)
 
-        choices    = cal.get_items('configs/', ext='config')
+        choices    = c.get_items('configs/', ext='config')
         self.array.set(choices[0]) # set the default option
 
         arr_menu   = tk.OptionMenu(self.mainframe, self.array, *choices, command=self.change_dropdown)
         tk.Label(self.mainframe, text='Select array').grid(row=0, column=0, padx=5, pady=2, sticky='EW')
         arr_menu.grid(row=0, column=1, padx=5, pady=2, sticky='EW')
 
-        self.infor = cal.load_config('configs/' + choices[0] + '.config')
+        self.infor = c.load_config('configs/' + choices[0] + '.config')
         self.plot_ant_config()
 
 
@@ -174,7 +174,7 @@ class Window(tk.Frame):
         # For source models
         self.src = tk.StringVar(self.master)
 
-        photos   = cal.get_items('sources/', ext='png')
+        photos   = c.get_items('sources/', ext='png')
         self.src.set('galaxy_lobes') # set the default option
 
         arr_menu = tk.OptionMenu(self.mainframe, self.src, *photos, command=self.show_src)
@@ -336,7 +336,7 @@ class Window(tk.Frame):
 
     # on change dropdown value
     def change_dropdown(self,value):
-        self.infor = cal.load_config('configs/' + self.array.get() + '.config')
+        self.infor = c.load_config('configs/' + self.array.get() + '.config')
         self.plot_ant_config()
 
 
@@ -397,7 +397,7 @@ class Window(tk.Frame):
             sys.exit()
 
         ha_hr                 = np.array( [ha_start, ha_end] )
-        ha_arr_hr, el_arr_deg = cal.get_elevation_curve(self.infor['latitude_rad'], ha_hr, dec, samp_rate)
+        ha_arr_hr, el_arr_deg = c.get_elevation_curve(self.infor['latitude_rad'], ha_hr, dec, samp_rate)
         
         topwin = tk.Toplevel(background=self.bg_colour)
         topwin.title('Elevation')
@@ -513,7 +513,7 @@ class Window(tk.Frame):
             return
         
         # Calc. the Synthesised Beam
-        self.beam_arr = cal.get_synth_beam(self.griduv_status, self.uv_mask_arr)
+        self.beam_arr = c.get_synth_beam(self.griduv_status, self.uv_mask_arr)
         self.beam_arr = np.abs(self.beam_arr)
 
         # Catch blank arrays
@@ -582,7 +582,7 @@ class Window(tk.Frame):
             print('The Synthesised Beam has not been established!')
             return
 
-        self.obs_img_arr = cal.invert_obs(self.griduv_status, self.beam_status, self.obs_fft_arr)
+        self.obs_img_arr = c.invert_obs(self.griduv_status, self.beam_status, self.obs_fft_arr)
         self.obs_img_arr = np.abs(self.obs_img_arr)
 
         
@@ -637,9 +637,9 @@ class Window(tk.Frame):
             sys.exit()
         
         ha_hr                          = np.array( [ha_start, ha_end] )
-        ha_arr_hr, el_arr_deg          = cal.get_elevation_curve(self.infor['latitude_rad'], ha_hr, dec, samp_rate)
+        ha_arr_hr, el_arr_deg          = c.get_elevation_curve(self.infor['latitude_rad'], ha_hr, dec, samp_rate)
         
-        self.u_arr_lda, self.v_arr_lda = cal.get_uv_coverage(self.infor, dec, ha_arr_hr, el_arr_deg, self.lambda_m)
+        self.u_arr_lda, self.v_arr_lda = c.get_uv_coverage(self.infor, dec, ha_arr_hr, el_arr_deg, self.lambda_m)
         self.uv_status                 = True
 
 
@@ -670,7 +670,7 @@ class Window(tk.Frame):
         plt.close()
 
 
-        self.uv_mask_arr, self.uv_cnt_arr, self.obs_fft_arr = cal.grid_uvcoverage(self.src_fft_status, self.uv_status, self.src_fft_arr,\
+        self.uv_mask_arr, self.uv_cnt_arr, self.obs_fft_arr = c.grid_uvcoverage(self.src_fft_status, self.uv_status, self.src_fft_arr,\
                                                                                   self.fft_scale_lam, self.pix_scale_fftX_lam, self.pix_scale_fftY_lam,\
                                                                                   self.u_arr_lda, self.v_arr_lda)
         self.griduv_status = True
@@ -713,7 +713,7 @@ class Window(tk.Frame):
 
         if(self.src_fft_status):
             self.src_fft_arr, self.pix_scale_img_lam, self.fft_scale_lam,\
-            self.pix_scale_fftX_lam, self.pix_scale_fftY_lam = cal.invert_src_img(self.src_status, self.src_img_arr, self.pix_scale_img_asec, self.nx, self.ny)
+            self.pix_scale_fftX_lam, self.pix_scale_fftY_lam = c.invert_src_img(self.src_status, self.src_img_arr, self.pix_scale_img_asec, self.nx, self.ny)
 
 
 
@@ -725,12 +725,12 @@ class Window(tk.Frame):
             self.pix_scale_img_asec = float( pix_scale_img_asec )
             self.pix_scale_img_deg  = self.pix_scale_img_asec / 3600.0
             text = ' %d x %d pix  /  %s x %s' % (self.nx, self.ny,
-                cal.ang2str(self.nx * self.pix_scale_img_deg),
-                cal.ang2str(self.ny * self.pix_scale_img_deg))
+                c.deg2str(self.nx * self.pix_scale_img_deg),
+                c.deg2str(self.ny * self.pix_scale_img_deg))
             tk.Label(self.mainframe, text=text).grid(row=4, column=0, padx=5, pady=2, sticky='EW')
 
             self.src_fft_arr, self.pix_scale_img_lam, self.fft_scale_lam,\
-            self.pix_scale_fftX_lam, self.pix_scale_fftY_lam = cal.invert_src_img(self.src_status, self.src_img_arr, self.pix_scale_img_asec, self.nx, self.ny)
+            self.pix_scale_fftX_lam, self.pix_scale_fftY_lam = c.invert_src_img(self.src_status, self.src_img_arr, self.pix_scale_img_asec, self.nx, self.ny)
 
             self.src_fft_status = True
 
